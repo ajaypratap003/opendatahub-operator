@@ -8,7 +8,7 @@ concurrency:
   cancel-in-progress: true
 env:
   IMAGE_REPO_ODHO: opendatahub-operator
-  QUAY_ORG: opendatahub
+  QUAY_ORG: apratap
   QUAY_ID: ${{ secrets.QUAY_ID }}
   QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
   SOURCE_BRANCH: main
