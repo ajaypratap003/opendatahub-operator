@@ -10,15 +10,15 @@ env:
   QUAY_ID: ${{ secrets.QUAY_ID }}
   QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
   # Todo: add GH_USER_EMAIL and GH_USER_NAME
-  GH_USER_EMAIL: ''
-  GH_USER_NAME: ''
+  GH_USER_EMAIL: 'apratap@redhat.com'
+  GH_USER_NAME: 'ajaypratap003'
 jobs:
   fetch-data:
     name: Fetch workflow payload
     runs-on: ubuntu-latest
-    # if: >
-    #   github.event.workflow_run.event == 'pull_request' &&
-    #   github.event.workflow_run.conclusion == 'success'
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
     outputs:
       pr_state: ${{ steps.vars.outputs.pr_state }}
       pr_number: ${{ steps.vars.outputs.pr_number }}
@@ -59,7 +59,7 @@ jobs:
           echo "event_action=${event_action}" >> $GITHUB_OUTPUT
 
   build-pr-image:
-    # if: needs.fetch-data.outputs.pr_state == 'open'
+    if: needs.fetch-data.outputs.pr_state == 'open'
     runs-on: ubuntu-latest
     needs: fetch-data
     concurrency:
