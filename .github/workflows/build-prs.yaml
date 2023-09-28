@@ -10,7 +10,7 @@ env:
   QUAY_ID: ${{ secrets.QUAY_ID }}
   QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
   # Todo: add GH_USER_EMAIL and GH_USER_NAME
-  GH_USER_EMAIL: 'apratap@redhat.com'
+  GH_USER_EMAIL: 'ajay.pratap233@gmail.com'
   GH_USER_NAME: 'ajaypratap003'
 jobs:
   fetch-data:
