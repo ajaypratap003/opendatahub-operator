@@ -1,7 +1,9 @@
 name: Build images for PRs
 on:
-  pull_request:
-
+  workflow_run:
+    workflows: ["Trigger build images for PRs"]
+    types:
+      - completed
 env:
   IMAGE_REPO_ODHO: opendatahub-operator
   QUAY_ORG: apratap #opendatahub
