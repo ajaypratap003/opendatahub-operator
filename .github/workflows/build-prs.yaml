@@ -118,7 +118,7 @@ jobs:
 
           ```bash
           cd $(mktemp -d)
-          git clone git@github.com:opendatahub-io/opendatahub-operator.git
+          git clone git@github.com:ajaypratap003/opendatahub-operator.git
           cd opendatahub-operator/
           git fetch origin pull/${{ needs.fetch-data.outputs.pr_number }}/head
           git checkout -b pullrequest ${{ env.SOURCE_BRANCH }}
