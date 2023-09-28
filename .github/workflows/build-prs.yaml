@@ -1,7 +1,7 @@
 name: Build images for PRs
 on:
   pull_request:
-  
+
 env:
   IMAGE_REPO_ODHO: opendatahub-operator
   QUAY_ORG: apratap #opendatahub
@@ -14,9 +14,9 @@ jobs:
   fetch-data:
     name: Fetch workflow payload
     runs-on: ubuntu-latest
-    if: >
-      github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion == 'success'
+    # if: >
+    #   github.event.workflow_run.event == 'pull_request' &&
+    #   github.event.workflow_run.conclusion == 'success'
     outputs:
       pr_state: ${{ steps.vars.outputs.pr_state }}
       pr_number: ${{ steps.vars.outputs.pr_number }}
