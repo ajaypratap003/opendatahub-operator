@@ -60,4 +60,4 @@ runs:
       env:
         IMAGE: quay.io/${{ env.QUAY_ORG }}/${{ inputs.IMAGE_REPO }}:${{ env.TARGET_IMAGE_TAG }}
       run: |
-          podman build . -f ${{ inputs.DOCKERFILE }} -t ${{ env.IMAGE }} && podman push ${{ env.IMAGE }}
+          podman build . -f ./Dockerfiles/Dockerfile  -t ${{ env.IMAGE }} && podman push ${{ env.IMAGE }}
