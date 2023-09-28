@@ -6,7 +6,7 @@ on:
       - completed
 env:
   IMAGE_REPO_ODHO: opendatahub-operator
-  QUAY_ORG: opendatahub
+  QUAY_ORG: apratap #opendatahub
   QUAY_ID: ${{ secrets.QUAY_ID }}
   QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
   # Todo: add GH_USER_EMAIL and GH_USER_NAME
