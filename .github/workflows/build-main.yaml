@@ -8,7 +8,7 @@ concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 env:
-  IMAGE_REPO_ODHO: opendatahub-operator
+  IMAGE_NAME: opendatahub-operator
   QUAY_ORG: opendatahub
   QUAY_ID: ${{ secrets.QUAY_ID }}
   QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
@@ -17,31 +17,33 @@ jobs:
   build-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Generate Tag
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate commit tag
         shell: bash
         id: tags
         run: |
           commit_sha=${{ github.event.after }}
           tag=main-${commit_sha:0:7}
           echo "tag=${tag}" >> $GITHUB_OUTPUT
-      - name: Build Image
-        uses: ./.github/actions/build
-        env:
-          IMG: quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_REPO_ODHO }}:${{ steps.tags.outputs.tag }}
-          TARGET_IMAGE_TAG: ${{ steps.tags.outputs.tag }}
+
+      - name: Login to Quay.io
+        uses: redhat-actions/podman-login@v1
         with:
-          OVERWRITE: true
-          IMAGE_REPO: ${{ env.IMAGE_REPO_ODHO }}
-          DOCKERFILE: ./Dockerfiles/Dockerfile
-          GH_REPO: ${{ github.repository }}
-      - name: Tag latest
-        shell: bash
+          username: ${{ env.QUAY_ID }}
+          password: ${{ env.QUAY_TOKEN }}
+          registry: quay.io
+
+      - name: Build the image
         env:
-          IMG: quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_REPO_ODHO }}
-          NEWEST_TAG: ${{ steps.tags.outputs.tag }}
+          IMAGE: quay.io/${{ env.QUAY_ORG }}/${{ inputs.IMAGE_NAME }}:${{ steps.tags.outputs.tag }}
+          COMMIT_TAG: ${{ steps.tags.outputs.tag }}
+        run:  |
+          podman build --file ./Dockerfiles/Dockerfile --build-arg TARGETOS=linux --build-arg TARGETARCH=arm64 --label quay.expires-after=90d \
+          --label git-sha=$GITHUB_SHA --no-cache --platform linux/arm64 --manifest {{ env.$IMAGE }} .
+
+      - name: Push the image
         run: |
-          podman tag ${IMG}:${NEWEST_TAG} ${IMG}:latest
-          podman push ${IMG}:latest
-          podman tag ${IMG}:${NEWEST_TAG} ${IMG}:main
-          podman push ${IMG}:main
+          podman manifest push $IMAGE_NAME:latest docker://quay.io/${{ secrets.QUAY_ORG }}/$IMAGE_NAME:${{ COMMIT_TAG }}
+          podman manifest push $IMAGE_NAME:latest docker://quay.io/${{ secrets.QUAY_ORG }}/$IMAGE_NAME:latest
