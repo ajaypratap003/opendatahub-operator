@@ -46,7 +46,7 @@ jobs:
           IMG: quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_REPO_ODHO }}
           NEWEST_TAG: ${{ steps.tags.outputs.tag }}
         run: |
-          podman tag ${IMG}:${NEWEST_TAG} ${IMG}:${{ steps.extract_branch.outputs.branch }}
-          podman push ${IMG}:${{ steps.extract_branch.outputs.branch }}
+          podman tag ${IMG}:${NEWEST_TAG} ${IMG}:${{ steps.extract_branch.outputs.branch }}-latest
+          podman push ${IMG}:${{ steps.extract_branch.outputs.branch }}-latest
           podman tag ${IMG}:${NEWEST_TAG} ${IMG}:${{ steps.extract_branch.outputs.branch }}
           podman push ${IMG}:${{ steps.extract_branch.outputs.branch }}
