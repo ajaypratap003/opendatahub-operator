@@ -12,7 +12,6 @@ require (
 	github.com/openshift/custom-resource-status v1.1.2
 	github.com/operator-framework/api v0.17.6
 	github.com/pkg/errors v0.9.1
-	github.com/project-codeflare/codeflare-operator v0.2.2
 	github.com/stretchr/testify v1.8.3
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
 	k8s.io/api v0.27.2
