@@ -59,7 +59,7 @@ jobs:
 
       - name: Load Image in KinD cluster
         run: |
-          kind load docker-image ${env.QUAY_ORG}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          kind load docker-image ${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
       
       - name: Deploy Operatorhub operator bundle
         id: deploy
