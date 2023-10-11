@@ -36,6 +36,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: shivanshs9/setup-k8s-operator-sdk@v1
+        with:
+         version: "1.24.1"
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
