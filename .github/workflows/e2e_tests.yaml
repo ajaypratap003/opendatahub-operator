@@ -53,15 +53,11 @@ jobs:
       - name: Install Operator SDK
         shell: bash
         run:  |
-          # Install operator-sdk
-          GO111MODULE=on go get github.com/operator-framework/operator-sdk@v1.24.1
-          sudo mv /home/runner/go/bin/operator-sdk /usr/local/bin/operator-sdk
-        if: success()
-          # mkdir -p ~/operator-sdk
-          # curl -LO https://github.com/operator-framework/operator-sdk/releases/download/v${{ env.OPERATOR_SDK_VERSION }}/operator-sdk_linux_amd64
-          # mv operator-sdk_linux_amd64 ~/operator-sdk/operator-sdk
-          # chmod +x ~/operator-sdk/operator-sdk
-          # echo 'export PATH=$PATH:~/operator-sdk' >> $GITHUB_ENV
+          sudo mkdir -p ~/operator-sdk
+          curl -LO https://github.com/operator-framework/operator-sdk/releases/download/v${{ env.OPERATOR_SDK_VERSION }}/operator-sdk_linux_amd64
+          mv operator-sdk_linux_amd64 ~/operator-sdk/operator-sdk
+          sudo chmod +x ~/operator-sdk/operator-sdk
+          echo 'export PATH=$PATH:~/operator-sdk' >> $GITHUB_ENV
         env:
           OPERATOR_SDK_VERSION: 1.24.1
 
