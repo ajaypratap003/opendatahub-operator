@@ -52,7 +52,7 @@ jobs:
 
       - name: Install Operator SDK
         run:  |
-           curl -L -o /usr/local/bin/operator-sdkhttps://github.com/operator-framework/operator-sdk/releases/download/v${{ env.OPERATOR_SDK_VERSION }}/operator-sdk-v${{ env.OPERATOR_SDK_VERSION }}-x86_64-linux-gnu
+           curl -LO /usr/local/bin/operator-sdkhttps://github.com/operator-framework/operator-sdk/releases/download/v${{ env.OPERATOR_SDK_VERSION }}/operator-sdk-v${{ env.OPERATOR_SDK_VERSION }}-x86_64-linux-gnu
            chmod +x /usr/local/bin/operator-sdk
            echo operator-sdk version
         env:
