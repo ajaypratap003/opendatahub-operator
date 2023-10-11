@@ -36,6 +36,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # - uses: drmendes/setup-k8s-operator-sdk@
+      #   with:
+      #     version: "1.24.1"
+
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -48,9 +52,9 @@ jobs:
 
       - name: Install Operator SDK
         run:  |
-           curl -LO https://github.com/operator-framework/operator-sdk/releases/download/v${{ env.OPERATOR_SDK_VERSION }}/operator-sdk-v${{ env.OPERATOR_SDK_VERSION }}-x86_64-linux-gnu
-           chmod +x operator-sdk-v${{ env.OPERATOR_SDK_VERSION }}-x86_64-linux-gnu
-           mv operator-sdk-v${{ env.OPERATOR_SDK_VERSION }}-x86_64-linux-gnu /usr/local/bin/operator-sdk
+           curl -L -o /usr/local/bin/operator-sdkhttps://github.com/operator-framework/operator-sdk/releases/download/v${{ env.OPERATOR_SDK_VERSION }}/operator-sdk-v${{ env.OPERATOR_SDK_VERSION }}-x86_64-linux-gnu
+           chmod +x /usr/local/bin/operator-sdk
+           echo operator-sdk version
         env:
           OPERATOR_SDK_VERSION: 1.24.1
 
@@ -58,10 +62,9 @@ jobs:
         run: |
           # Pull the Docker image from registry
           podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          which operator-sdk
-          /usr/local/bin/operator-sdk version
+
           # Create an Operator Bundle using the image
-          /usr/local/bin/operator-sdk bundle create quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --overwrite
+          operator-sdk bundle create quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --overwrite
     
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
