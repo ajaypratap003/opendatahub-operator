@@ -55,8 +55,8 @@ jobs:
         run:  |
           # make operator-sdk
           mkdir -p ~/operator-sdk
-          curl -L -o /usr/local/bin/operator-sdk https://github.com/operator-framework/operator-sdk/releases/download/v${{ env.OPERATOR_SDK_VERSION }}/operator-sdk-v${{ env.OPERATOR_SDK_VERSION }}-x86_64-linux-gnu
-          mv operator-sdk-v${{ env.OPERATOR_SDK_VERSION }}-x86_64-linux-gnu ~/operator-sdk/operator-sdk
+          curl -LO https://github.com/operator-framework/operator-sdk/releases/download/v${{ env.OPERATOR_SDK_VERSION }}/operator-sdk_linux_amd64
+          mv operator-sdk_linux_amd64 ~/operator-sdk/operator-sdk
           chmod +x ~/operator-sdk/operator-sdk
           echo 'export PATH=$PATH:~/operator-sdk' >> $GITHUB_ENV
           operator-sdk version
@@ -70,7 +70,8 @@ jobs:
 
           # Create an Operator Bundle using the image
           operator-sdk bundle create quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --overwrite
-    
+        working-directory: ${{ github.workspace }}
+
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
 
