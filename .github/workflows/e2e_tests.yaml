@@ -49,7 +49,7 @@ jobs:
       - name: Build Operator Bundle
         run: |
           # Pull the Docker image from registry
-          podman pull quay.io/${env.QUAY_ORG}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
           # Create an Operator Bundle using the image
           operator-sdk bundle create quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --image quay.io/${env.QUAY_ORG}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --overwrite
