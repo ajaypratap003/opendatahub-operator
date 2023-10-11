@@ -52,7 +52,7 @@ jobs:
           podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
           # Create an Operator Bundle using the image
-          operator-sdk bundle create quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --image quay.io/${env.QUAY_ORG}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --overwrite
+          operator-sdk bundle create quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --overwrite
     
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
