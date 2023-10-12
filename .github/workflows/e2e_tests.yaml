@@ -85,16 +85,15 @@ jobs:
       - name: Verify KinD
         run:  kubectl get nodes
 
-      - name: Pull Docker image from Quay.io
-        run: |
-          podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-        env:
-          DOCKER_BUNDLE_IMAGE: quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-
       - name: Load Image in KinD cluster
         run: |
           # Pull the Docker image from registry
-          sudo kind load docker-image ${{ env.DOCKER_BUNDLE_IMAGE }}
+          podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+          podman tag ${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} ${REGISTRY_ADDRESS}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          podman push ${REGISTRY_ADDRESS}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+          //sudo kind load docker-image --name 
       
       - name: Deploy Operatorhub operator bundle
         id: deploy
