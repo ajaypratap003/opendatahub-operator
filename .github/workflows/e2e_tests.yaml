@@ -84,10 +84,6 @@ jobs:
       #     #Verify bundle
       #     # operator-sdk bundle validate $BUNDLE_DIR
 
-      - name: Build bundle
-        run:  |
-          podman build 
-
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
 
