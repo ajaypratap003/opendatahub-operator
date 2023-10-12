@@ -94,7 +94,7 @@ jobs:
       - name: Load Image in KinD cluster
         run: |
           # Pull the Docker image from registry
-          kind load docker-image --name kind ${{ env.DOCKER_BUNDLE_IMAGE }}
+          sudo kind load docker-image ${{ env.DOCKER_BUNDLE_IMAGE }}
       
       - name: Deploy Operatorhub operator bundle
         id: deploy
