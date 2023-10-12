@@ -76,9 +76,8 @@ jobs:
       - name: Push Operator Bundle Image
         run:  |
           podman login --username=${{ env.QUAY_ID }} --password=${{ env.QUAY_TOKEN }} quay.io
-          
-          make bundle-push -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
-          -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+          make bundle-push -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
      
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
