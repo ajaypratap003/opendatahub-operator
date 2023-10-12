@@ -25,6 +25,8 @@ concurrency:
 
 env:
   QUAY_ORG: apratap
+  QUAY_ID:  ${{ secrets.QUAY_ID }}
+  QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
   BUNDLE_IMAGE_NAME: opendatahub-operator-bundle
   IMAGE_NAME: opendatahub-operator
   IMAGE_TAG: pr-4
@@ -67,6 +69,9 @@ jobs:
         run:  |
           make bundle-push -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
           -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+        with:
+          username: ${{ env.QUAY_ID }}
+          password: ${{ env.QUAY_TOKEN }}
      
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
