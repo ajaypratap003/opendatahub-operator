@@ -57,6 +57,13 @@ jobs:
       # - name: Verify Operator-SDK installation
       #   run: operator-sdk version
 
+      - name: Log in to image registry Quay.io
+        uses: redhat-actions/podman-login@v1
+        with:
+          username: ${{ env.QUAY_ID }}
+          password: ${{ env.QUAY_TOKEN }}
+          registry: quay.io
+
       - name: Build Operator Bundle
         run: |
           # Pull the Docker image from registry
