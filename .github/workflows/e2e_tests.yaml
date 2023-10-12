@@ -59,7 +59,7 @@ jobs:
           # ls /usr/local/bin/
           # echo /usr/local/bin/operator-sdk >> $GITHUB_PATH
           # echo $PATH
-          curl -LO https://github.com/operator-framework/operator-sdk/releases/latest/download/operator-sdk_linux_amd64
+          curl -LO https://github.com/operator-framework/operator-sdk/releases/v${{ env.OPERATOR_SDK_VERSION}}/download/operator-sdk_linux_amd64
           chmod +x operator-sdk_linux_amd64
           sudo mv operator-sdk_linux_amd64 /usr/local/bin/operator-sdk
         env:
@@ -68,16 +68,31 @@ jobs:
       - name: Verify Operator-SDK installation
         run: operator-sdk version
 
-      - name: Build Operator Bundle
-        run: |
-          # Pull the Docker image from registry
-          podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          ls /usr/local/bin/
-          # Create an Operator Bundle using the image
-          operator-sdk bundle create quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --overwrite
+      # - name: Build Operator Bundle
+      #   run: |
+      #     # Pull the Docker image from registry
+      #     podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+       
+      #     # Create an Operator Bundle using the image
+      #     #operator-sdk bundle create quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --overwrite
+          
+      #     # Set the bundle directory
+      #     #export BUNDLE_DIR=./bundle
+
+      #     #Build the bundle image using operator-sdk
+      #     #operator-sdk bundle create $BUNDLE_DIR --metadata --image $quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+      #     #Verify bundle
+      #     # operator-sdk bundle validate $BUNDLE_DIR
+
+      - name: Build bundle
+        run:  |
+          podman build 
 
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
+
+      - name: Verify KinD
+        run:  kind get nodes
 
       - name: Load Image in KinD cluster
         run: |
