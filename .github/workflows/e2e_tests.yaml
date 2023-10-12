@@ -43,29 +43,31 @@ jobs:
         with:
           go-version: 1.19
 
-      - name: Install Operator SDK
-        shell: bash
-        run:  |
-          curl -LO https://github.com/operator-framework/operator-sdk/releases/latest/download/operator-sdk_linux_amd64
-          chmod +x operator-sdk_linux_amd64
-          sudo mv operator-sdk_linux_amd64 /usr/local/bin/operator-sdk
-        env:
-          OPERATOR_SDK_VERSION: 1.24.1
+      # - name: Install Operator SDK
+      #   shell: bash
+      #   run:  |
+      #     curl -LO https://github.com/operator-framework/operator-sdk/releases/latest/download/operator-sdk_linux_amd64
+      #     chmod +x operator-sdk_linux_amd64
+      #     sudo mv operator-sdk_linux_amd64 /usr/local/bin/operator-sdk
+      #   env:
+      #     OPERATOR_SDK_VERSION: 1.24.1
 
-      - name: Verify Operator-SDK installation
-        run: operator-sdk version
+      # - name: Verify Operator-SDK installation
+      #   run: operator-sdk version
 
-      - name: Build and Push Operator Bundle
+      - name: Build Operator Bundle
         run: |
           # Pull the Docker image from registry
           podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
-          make bundle-build bundle-push -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+          make bundle-build -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
           -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-       
-      #     # Create an Operator Bundle using the image
-      #     #operator-sdk bundle create quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --overwrite
 
+      - name: Push Operator Bundle Image
+        run:  |
+          make bundle-push -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+          -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+     
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
 
@@ -75,8 +77,8 @@ jobs:
       - name: Load Image in KinD cluster
         run: |
           # Pull the Docker image from registry
-          podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
       
       - name: Deploy Operatorhub operator bundle
         id: deploy
