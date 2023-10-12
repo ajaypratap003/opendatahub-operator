@@ -57,7 +57,10 @@ jobs:
           # sudo chmod +x operator-sdk-v${{ env.OPERATOR_SDK_VERSION }}-x86_64-linux-gnu
           # sudo mv operator-sdk-v${{ env.OPERATOR_SDK_VERSION }}-x86_64-linux-gnu /usr/local/bin/operator-sdk
           # echo ls /usr/local/bin/operator-sdk
-          make operator-sdk
+          # make operator-sdk
+          export GO111MODULE=on
+          go get github.com/operator-framework/operator-sdk@v1.24.1
+          export PATH=${PATH}:${GOPATH}/bin
 
           which operator-sdk
           operator-sdk version       
