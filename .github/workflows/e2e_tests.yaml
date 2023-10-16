@@ -79,7 +79,7 @@ jobs:
         uses: ./.github/actions/kind
 
       - name: Verify KinD
-        run:  kubectl get nodes
+        run:  kubectl get nodes 
 
       - name: Connect the registry to the cluster network
         uses: ./.github/actions/docker-network
@@ -88,7 +88,9 @@ jobs:
         run: |
           # Pull the Docker image from registry
           podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
           echo $REGISTRY_ADDRESS
+          
           podman tag quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           podman push ${REGISTRY_ADDRESS}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
       

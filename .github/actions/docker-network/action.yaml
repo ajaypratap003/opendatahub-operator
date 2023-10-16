@@ -22,5 +22,5 @@ runs:
         # This allows kind to bootstrap the network but ensures they're on the same
 
         if [ "$(docker inspect -f='{{json .NetworkSettings.Networks.kind}}' "${REGISTRY_NAME}")" = 'null' ]; then
-          docker network connect kind $REGISTRY_NAME
+          docker network connect kind-cluster $REGISTRY_NAME
         fi
