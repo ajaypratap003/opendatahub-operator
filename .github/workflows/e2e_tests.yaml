@@ -97,6 +97,7 @@ jobs:
       - name: Download image from Quay.io
         run:  |
           podman  pull quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          podman tag quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           docker ps
 
       - name: Load Image in KinD cluster
@@ -113,7 +114,7 @@ jobs:
         id: deploy
         run: |
           echo Deploying Operatorhub operator
-          IMG=${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           make deploy -e IMG="${IMG}"
           kubectl wait --timeout=120s --for=condition=Available=true deployment -n openshift-operators opendatahub-operator-manager
 
