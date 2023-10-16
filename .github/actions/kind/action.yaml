@@ -22,11 +22,16 @@ runs:
         export REGISTRY_ADDRESS=$(hostname -i):$REGISTRY_PORT
 
         # Create registry container unless it already exists
-        if [ "$(docker inspect -f '{{.State.Running}}' "${REGISTRY_NAME}" 2>/dev/null || true)" != 'true' ]; then
-          docker run \
+        # if [ "$(docker inspect -f '{{.State.Running}}' "${REGISTRY_NAME}" 2>/dev/null || true)" != 'true' ]; then
+        #   docker run \
+        #     -d --restart=always -p $(hostname -i):$REGISTRY_PORT:$REGISTRY_PORT --name $REGISTRY_NAME \
+        #     registry:2.8.1
+        # fi
+
+        docker run \
             -d --restart=always -p $(hostname -i):$REGISTRY_PORT:$REGISTRY_PORT --name $REGISTRY_NAME \
             registry:2.8.1
-        fi
+            
 
         echo "REGISTRY_ADDRESS=${REGISTRY_ADDRESS}" >> $GITHUB_ENV
         echo "Container image registry started at ${REGISTRY_ADDRESS}"
@@ -36,7 +41,7 @@ runs:
         envsubst < .github/resources/kind/kind.yaml > ${KIND_CONFIG_FILE}
 
         sudo --preserve-env=REGISTRY_ADDRESS sh -c 'cat > /etc/containers/registries.conf.d/local.conf <<EOF
-        [[$REGISTRY_NAME]]
+        [[registry]]
         prefix = "$REGISTRY_ADDRESS"
         insecure = true
         location = "$REGISTRY_ADDRESS"
