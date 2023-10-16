@@ -18,13 +18,13 @@ runs:
       shell: bash
       run: |
         export REGISTRY_NAME='registry'
-        export REGISTRY_PORT='5000'
+        export REGISTRY_PORT=5000
         export REGISTRY_ADDRESS=$(hostname -i):$REGISTRY_PORT
 
         # Create registry container unless it already exists
         if [ "$(docker inspect -f '{{.State.Running}}' "${REGISTRY_NAME}" 2>/dev/null || true)" != 'true' ]; then
           docker run \
-            -d --restart=always -p $REGISTRY_ADDRESS --name ${REGISTRY_NAME} \
+            -d --restart=always -p $REGISTRY_ADDRESS --name $REGISTRY_NAME \
             registry:2.8.1
         fi
 
@@ -36,7 +36,7 @@ runs:
         envsubst < .github/resources/kind/kind.yaml > ${KIND_CONFIG_FILE}
 
         sudo --preserve-env=REGISTRY_ADDRESS sh -c 'cat > /etc/containers/registries.conf.d/local.conf <<EOF
-        [[registry]]
+        [[$REGISTRY_NAME]]
         prefix = "$REGISTRY_ADDRESS"
         insecure = true
         location = "$REGISTRY_ADDRESS"
