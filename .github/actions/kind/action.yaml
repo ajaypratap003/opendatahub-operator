@@ -24,7 +24,7 @@ runs:
         # Create registry container unless it already exists
         if [ "$(docker inspect -f '{{.State.Running}}' "${REGISTRY_NAME}" 2>/dev/null || true)" != 'true' ]; then
           docker run \
-            -d --restart=always -p $REGISTRY_ADDRESS --name $REGISTRY_NAME \
+            -d --restart=always -p $(hostname -i):$REGISTRY_PORT:$REGISTRY_PORT --name $REGISTRY_NAME \
             registry:2.8.1
         fi
 
