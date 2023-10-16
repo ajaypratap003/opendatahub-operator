@@ -73,6 +73,7 @@ jobs:
 
       - name: Push Operator Bundle Image
         run:  |
+          podman tag quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} ${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           podman push quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
      
       - name: Setup and start KinD cluster
@@ -94,19 +95,15 @@ jobs:
       #   run:  |
       #     docker ps
 
-      - name: Download image from Quay.io
-        run:  |
-          podman  pull quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          podman tag quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          docker ps
-
       - name: Load Image in KinD cluster
         run: |
           # Pull the Docker image from registry
+          docker ps
+          kubectl get pods -w
           kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
           docker ps
-
+          kubectl get pods -w
           # podman tag quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           # podman push ${REGISTRY_ADDRESS}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
       
