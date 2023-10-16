@@ -81,6 +81,9 @@ jobs:
       - name: Verify KinD
         run:  kubectl get nodes
 
+      - name: Connect the registry to the cluster network
+        uses: ./.github/actions/docker-network
+
       - name: Load Image in KinD cluster
         run: |
           # Pull the Docker image from registry
