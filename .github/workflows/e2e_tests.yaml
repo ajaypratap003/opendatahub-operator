@@ -74,7 +74,7 @@ jobs:
 
       - name: Push Operator Bundle Image
         run:  |
-          podman push quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker push quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
      
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
@@ -86,7 +86,7 @@ jobs:
       - name: Load Image in KinD cluster
         run: |
           # Pull the image from registry
-          podman images
+          docker images
 
           #podman save --format docker-archive quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
