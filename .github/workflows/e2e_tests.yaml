@@ -85,8 +85,8 @@ jobs:
 
       - name: Connect to registry
         run:  |
-          podman ps
-          podman --network slirp4netns:cidr=192.168.1.0/24 connect "kind-cluster" registry
+          docker ps
+          docker network connect "kind-cluster" registry
 
            cat <<EOF | kubectl apply -f -
             apiVersion: v1
