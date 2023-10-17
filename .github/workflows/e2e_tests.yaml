@@ -97,7 +97,7 @@ jobs:
           IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
           make deploy -e IMG="${IMG}"
-          kubectl wait --timeout=120s --for=condition=Available=true deployment -n openshift-operators opendatahub-operator-manager
+          kubectl wait --timeout=120s --for=condition=Available=true deployment -n opendatahub-operator-system opendatahub-operator-manager
 
       - name: Run e2e tests
         run: |
