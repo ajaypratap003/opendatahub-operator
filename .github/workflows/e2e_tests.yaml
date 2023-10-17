@@ -55,7 +55,7 @@ jobs:
 
       - name: Build Operator Bundle
         run: |
-          # Pull the Docker image from registry
+          # Pull the image from registry
           while true
           do
             echo "Pulling image from Quay.io";
@@ -68,14 +68,13 @@ jobs:
 
           done
 
+          # Build operator bundle image
           make bundle-build -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
           -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
       - name: Push Operator Bundle Image
         run:  |
-          podman images
           podman push quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          podman images
      
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
@@ -83,35 +82,20 @@ jobs:
       - name: Verify KinD
         run:  |
           kubectl get nodes -o wide
-          kind get clusters
 
-      # - name: Connect the registry to the cluster network
-      #   # uses: ./.github/actions/docker-network
-      #   run:  |
-      #     podman  pull quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-      #     kind load docker-image ${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+      # - name: Load Image in KinD cluster
+      #   run: |
+      #     # Pull the image from registry
+      #     podman images
+      #     podman save --format docker-archive quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+      #     kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
       
-      # - name: Verify docker registry 
-      #   shell: bash
-      #   run:  |
-      #     docker ps
-
-      - name: Load Image in KinD cluster
-        run: |
-          # Pull the image from registry
-          #podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          podman images
-          podman save --format docker-archive quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
-
-          # podman tag quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          # podman push ${REGISTRY_ADDRESS}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-      
-      - name: Deploy Operatorhub operator bundle
+      - name: Deploy Operatorhub operator
         id: deploy
         run: |
-          echo Deploying Operatorhub operator
+          echo "Deploying Operatorhub operator"
           IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
           make deploy -e IMG="${IMG}"
           kubectl wait --timeout=120s --for=condition=Available=true deployment -n openshift-operators opendatahub-operator-manager
 
