@@ -100,7 +100,7 @@ jobs:
           # Pull the Docker image from registry
           docker ps
           kubectl get pods -w
-          kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          kind load docker-image --name kind-cluster quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
           docker ps
           kubectl get pods -w
