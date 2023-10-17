@@ -85,7 +85,8 @@ jobs:
 
       - name: Connect to registry
         run:  |
-          docker network connect "kind-cluster" registry
+          docker ps
+          docker network connect kind-cluster registry
 
       - name: Load Image in KinD cluster
         run: |

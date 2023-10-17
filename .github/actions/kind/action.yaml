@@ -21,11 +21,9 @@ runs:
         export REGISTRY_PORT=5000
         export REGISTRY_ADDRESS=$(hostname -i):$REGISTRY_PORT
         
-        docker run \
-            -d --restart=always -p $(hostname -i):$REGISTRY_PORT:$REGISTRY_PORT --name $REGISTRY_NAME \
-            registry:2.8.1
+        podman run  --name $REGISTRY_NAME\
+            -d --restart=always -p $(hostname -i):$REGISTRY_PORT:$REGISTRY_PORT registry:2.8.1
             
-
         echo "REGISTRY_ADDRESS=${REGISTRY_ADDRESS}" >> $GITHUB_ENV
         echo "Container image registry started at ${REGISTRY_ADDRESS}"
 
