@@ -83,6 +83,10 @@ jobs:
         run:  |
           kubectl get nodes -o wide
 
+      - name: Connect to registry
+        run:  |
+          docker network connect "kind-cluster" registry
+
       - name: Load Image in KinD cluster
         run: |
           # podman save docker.io/kindest/node:v1.25.3 -o quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
