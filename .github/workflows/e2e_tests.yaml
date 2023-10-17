@@ -100,7 +100,7 @@ jobs:
           IMG="${REGISTRY_ADDRESS}"/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
           make deploy -e IMG="${IMG}"
-          kubectl wait --timeout=120s --for=condition=Available=true deployment -n opendatahub-operator-system
+          kubectl wait --timeout=120s --for=condition=Available=true deployment -n opendatahub-operator-system opendatahub-operator-controller-manager
 
       - name: Run e2e tests
         run: |
