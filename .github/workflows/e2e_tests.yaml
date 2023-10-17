@@ -97,9 +97,9 @@ jobs:
         id: deploy
         run: |
           echo Deploying Operatorhub operator
-          IMG="${REGISTRY_ADDRESS}"/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          BUNDLE_IMG="${REGISTRY_ADDRESS}"/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
-          make deploy -e IMG="${IMG}"
+          make deploy-bundle -e BUNDLE_IMG="${BUNDLE_IMG}"
           kubectl wait --timeout=120s --for=condition=Available=true deployments --all
 
       - name: Run e2e tests
