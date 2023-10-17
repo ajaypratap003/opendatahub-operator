@@ -102,7 +102,7 @@ jobs:
           #podman pull quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           podman images
           podman save --format docker-archive quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          kind load image-archive quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
+          kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
 
           # podman tag quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           # podman push ${REGISTRY_ADDRESS}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
