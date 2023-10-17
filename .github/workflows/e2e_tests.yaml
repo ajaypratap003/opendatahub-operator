@@ -86,7 +86,19 @@ jobs:
       - name: Connect to registry
         run:  |
           podman ps
-          podman network connect kind-cluster registry
+          podman network connect "kind-cluster" registry
+
+           cat <<EOF | kubectl apply -f -
+            apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: local-registry-hosting
+              namespace: kube-public
+            data:
+              localRegistryHosting.v1: |
+                host: "${REGISTRY_ADDRESS}"
+                help: "https://kind.sigs.k8s.io/docs/user/local-registry/"
+            EOF
 
       - name: Load Image in KinD cluster
         run: |

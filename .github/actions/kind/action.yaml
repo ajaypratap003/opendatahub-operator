@@ -22,7 +22,7 @@ runs:
         export REGISTRY_ADDRESS=$(hostname -i):$REGISTRY_PORT
         
         podman run  --name $REGISTRY_NAME\
-            -d --restart=always -p $(hostname -i):$REGISTRY_PORT:$REGISTRY_PORT registry:2.8.1
+            -d --restart=always -p $(hostname -i):$REGISTRY_PORT:$REGISTRY_PORT registry:2
             
         echo "REGISTRY_ADDRESS=${REGISTRY_ADDRESS}" >> $GITHUB_ENV
         echo "Container image registry started at ${REGISTRY_ADDRESS}"
