@@ -86,7 +86,8 @@ jobs:
       - name: Connect to registry
         run:  |
           docker ps
-          docker network connect "kind-cluster" registry
+          kind get clusters
+          docker network connect kind-cluster registry
 
            cat <<EOF | kubectl apply -f -
             apiVersion: v1
