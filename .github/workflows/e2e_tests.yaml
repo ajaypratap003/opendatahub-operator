@@ -91,7 +91,7 @@ jobs:
           echo $REGISTRY_NAME
           docker network connect kind registry
 
-           cat <<EOF | kubectl apply -f -
+          cat <<EOF | kubectl apply -f -
             apiVersion: v1
             kind: ConfigMap
             metadata:
@@ -101,7 +101,7 @@ jobs:
               localRegistryHosting.v1: |
                 host: "${REGISTRY_ADDRESS}"
                 help: "https://kind.sigs.k8s.io/docs/user/local-registry/"
-            EOF
+          EOF
 
       - name: Load Image in KinD cluster
         run: |
