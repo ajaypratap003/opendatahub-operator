@@ -80,6 +80,7 @@ jobs:
       - name: Verify KinD
         run:  |
           #export KUBECONFIG="$(kind get kubeconfig-path --name="kind-cluster")"
+          kubectl cluster-info --context kind-kind-cluster
           kind get clusters
           kubectl get nodes -o wide
 
@@ -88,7 +89,7 @@ jobs:
           podman images
           kind get clusters
           echo $REGISTRY_NAME
-          docker network connect kind-cluster registry
+          docker network connect kind registry
 
            cat <<EOF | kubectl apply -f -
             apiVersion: v1
