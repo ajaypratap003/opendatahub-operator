@@ -88,7 +88,7 @@ jobs:
           podman images
           kind get clusters
           echo $REGISTRY_NAME
-          podman network connect 'kind-cluster' 'kind-registry'
+          podman network connect kind-cluster kind-registry
            cat <<EOF | kubectl apply -f -
             apiVersion: v1
             kind: ConfigMap
