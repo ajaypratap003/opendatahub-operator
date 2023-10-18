@@ -125,12 +125,12 @@ jobs:
           IMG="${REGISTRY_ADDRESS}"/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
           make deploy -e IMG="${IMG}"
-          kubectl get pods --all-namesapces
+          kubectl get pods --all-namespaces
           kubectl wait --timeout=120s --for=condition=Available=true deployment -n opendatahub-operator-system
 
           kubectl get nodes -o wide
-          kubectl get pods --all-namesapces
-          kubectl get services --all-namesapces -o wide
+          kubectl get pods --all-names
+          kubectl get services --all-namespaces -o wide
 
       - name: Run e2e tests
         run: |
