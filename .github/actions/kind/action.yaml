@@ -48,6 +48,7 @@ runs:
     - name: Print cluster info
       shell: bash
       run: |
+        exort KUBECONFIG="${kind get kubeconfig-path --name="kind"}"
         echo "KinD cluster:"
         kubectl cluster-info
         kubectl describe nodes
