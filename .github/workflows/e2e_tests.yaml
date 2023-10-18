@@ -85,8 +85,7 @@ jobs:
 
       - name: Load Image in KinD cluster
         run: |
-          docker save quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} | docker exec --privileged -i kind-control-plane ctr --namespace=k8s.io images import --all-platforms -
-          #podman save docker.io/kindest/node:v1.28.0 -o quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker save docker.io/kindest/node:v1.28.0 -o quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           kind load image-archive quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
 
           docker images
