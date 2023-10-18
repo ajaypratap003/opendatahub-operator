@@ -79,8 +79,7 @@ jobs:
 
       - name: Verify KinD
         run:  |
-          #export KUBECONFIG="$(kind get kubeconfig-path --name="kind-cluster")"
-          kubectl cluster-info --context kind-kind-cluster
+          kubectl cluster-info --context kind-kind
           kind get clusters
           kubectl get nodes -o wide
 
@@ -139,4 +138,4 @@ jobs:
 
       - name: Clean up KinD cluster
         run:  |
-          kind delete cluster --name kind-cluster
+          kind delete cluster --name kind
