@@ -98,9 +98,7 @@ jobs:
           EOF
           done
 
-          if [ "$(docker inspect -f='{{json .NetworkSettings.Networks.kind}}' "${reg_name}")" = 'null' ]; then
-            docker network connect "kind-cluster" "${reg_name}"
-          fi
+          docker network connect "kind-cluster" "${reg_name}"
 
           docker tag quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           docker push $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
