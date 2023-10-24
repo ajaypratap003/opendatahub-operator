@@ -102,6 +102,8 @@ jobs:
 
           docker tag quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           docker push $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+          docker network ls
       
       - name: Deploy Operatorhub operator
         id: deploy
