@@ -54,14 +54,13 @@ jobs:
       - name: Build Operator Bundle
         run: |
           # Pull the image from registry
-          export IMAGE_BUILDER=docker
 
           while true
           do
             echo "Pulling image from Quay.io";
             sleep 10
 
-            if $IMAGE_BUILDER pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+            if docker pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             then
               break
             fi
@@ -70,11 +69,11 @@ jobs:
 
           # Build operator bundle image
           make bundle-build -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
-          -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=docker
 
       - name: Push Operator Bundle Image
         run:  |
-          $IMAGE_BUILDER push quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker push quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
      
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
@@ -87,7 +86,7 @@ jobs:
 
       - name: Load Image in KinD cluster
         run: |
-          #$IMAGE_BUILDER save docker.io/kindest/node:v1.28.0 -o quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          #docker save docker.io/kindest/node:v1.28.0 -o quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name 'kind-cluster'
       
       - name: Deploy Operatorhub operator
