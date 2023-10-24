@@ -90,13 +90,13 @@ jobs:
           #kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name 'kind-cluster'
           docker tag quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           docker push $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-
-          reg_port=5001
-          REGISTRY_DIR="/etc/containerd/certs.d/localhost:${reg_port}"
+          
+          reg_name='kind-registry'
+          REGISTRY_DIR="/etc/containerd/certs.d/${REGISTRY_ADDRESS}"
           for node in $(kind get nodes); do
             docker exec "${node}" mkdir -p "${REGISTRY_DIR}"
             cat <<EOF | docker exec -i "${node}" cp /dev/stdin "${REGISTRY_DIR}/hosts.toml"
-          [host."http://${reg_name}:5000"]
+          [host."${REGISTRY_ADDRESS}"]
           EOF
           done
 
