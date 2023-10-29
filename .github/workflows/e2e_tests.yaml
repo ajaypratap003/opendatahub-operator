@@ -94,16 +94,14 @@ jobs:
         id: deploy
         run: |
           echo Deploying Operatorhub operator
-          echo "environment-kubeconfig:" ${kubeconfig}
           IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           OPERATOR_NAMESPACE=opendatahub-operator-system
 
           make deploy -e IMG="${IMG}" OPERATOR_NAMESPACE="${OPERATOR_NAMESPACE}"
 
           kubectl get nodes -o wide
-          # kubectl wait --timeout=300s --for=condition=Status=Running -n OPERATOR_NAMESPACE
-          kubectl -n OPERATOR_NAMESPACE wait --timeout=300s --for=condition=Available deployments --all
           kubectl get pods --all-namespaces
+          kubectl -n OPERATOR_NAMESPACE wait --timeout=300s --for=condition=Available deployments --all
 
       - name: Run e2e tests
         run: |
