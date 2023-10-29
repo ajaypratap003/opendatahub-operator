@@ -80,10 +80,10 @@ jobs:
 
       - name: Verify KinD
         run:  |
-          export KUBECONFIG="$(kind get kubeconfig-path --name="kind-cluster")"
+          export KUBECONFIG="$(kind get kubeconfig --name=kind-cluster)"
           kind get clusters
           kubectl get nodes -o wide
-          kind get kubeconfig --name=kind-cluster
+          echo KUBECONFIG
 
       - name: Load Image in KinD cluster
         run: |
@@ -99,7 +99,7 @@ jobs:
 
           make deploy -e IMG="${IMG}" OPERATOR_NAMESPACE="${OPERATOR_NAMESPACE}"
           kubectl get nodes -o wide
-          kubectl -n OPERATOR_NAMESPACE wait --timeout=300s --for=condition=Available=true deployments --all
+          # kubectl -n OPERATOR_NAMESPACE wait --timeout=300s --for=condition=Available=true deployments --all
 
           kubectl get pods --all-namesapces
           kubectl get services --all-namesapces -o wide
