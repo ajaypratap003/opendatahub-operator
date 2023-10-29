@@ -93,19 +93,20 @@ jobs:
         id: deploy
         run: |
           echo Deploying Operatorhub operator
+          echo "environment-kubeconfig:" ${KUBECONFIG}
           IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           OPERATOR_NAMESPACE=opendatahub-operator-system
 
           make deploy -e IMG="${IMG}" OPERATOR_NAMESPACE="${OPERATOR_NAMESPACE}"
-          kubectl get nodes -o wide
-          # kubectl -n OPERATOR_NAMESPACE wait --timeout=300s --for=condition=Available=true deployments --all
 
+          kubectl get nodes -o wide
+          kubectl -n OPERATOR_NAMESPACE wait --timeout=300s --for=condition=Ready=true deployments --all
           kubectl get pods --all-namespaces
-          kubectl get services --all-namespaces -o wide
 
       - name: Run e2e tests
         run: |
-          make e2e-test
+          export KUBECONFIG="$(kind get kubeconfig-path)"
+          make e2e-test OPERATOR_NAMESPACE=opendatahub-operator-system
 
       - name: Clean up KinD cluster
         run:  |
