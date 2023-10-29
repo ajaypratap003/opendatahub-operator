@@ -80,10 +80,9 @@ jobs:
 
       - name: Verify KinD
         run:  |
-          export KUBECONFIG="$(kind get kubeconfig --name=kind-cluster)"
+          # export KUBECONFIG="$(kind get kubeconfig --name=kind-cluster)"
           kind get clusters
           kubectl get nodes -o wide
-          echo KUBECONFIG
 
       - name: Load Image in KinD cluster
         run: |
