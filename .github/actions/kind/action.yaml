@@ -14,31 +14,31 @@ runs:
         mkdir -p "$(pwd)/bin"
         echo "$(pwd)/bin" >> $GITHUB_PATH
 
-    - name: Container image registry
-      shell: bash
-      run: |
-        export REGISTRY_NAME='kind-registry'
-        export REGISTRY_PORT=5000
-        export REGISTRY_ADDRESS=$(hostname -i):$REGISTRY_PORT
+    # - name: Container image registry
+    #   shell: bash
+    #   run: |
+    #     export REGISTRY_NAME='kind-registry'
+    #     export REGISTRY_PORT=5000
+    #     export REGISTRY_ADDRESS=$(hostname -i):$REGISTRY_PORT
 
-        docker run \
-            -d --restart=always -p $REGISTRY_ADDRESS:$REGISTRY_PORT --name $REGISTRY_NAME \
-            registry:2.8.1
+    #     docker run \
+    #         -d --restart=always -p $REGISTRY_ADDRESS:$REGISTRY_PORT --name $REGISTRY_NAME \
+    #         registry:2.8.1
             
 
-        echo "REGISTRY_ADDRESS=${REGISTRY_ADDRESS}" >> $GITHUB_ENV
-        echo "Container image registry started at ${REGISTRY_ADDRESS}"
+    #     echo "REGISTRY_ADDRESS=${REGISTRY_ADDRESS}" >> $GITHUB_ENV
+    #     echo "Container image registry started at ${REGISTRY_ADDRESS}"
 
-        KIND_CONFIG_FILE=${{ env.TEMP_DIR }}/kind.yaml
-        echo "KIND_CONFIG_FILE=${KIND_CONFIG_FILE}" >> $GITHUB_ENV
-        envsubst < .github/resources/kind/kind.yaml > ${KIND_CONFIG_FILE}
+    #     KIND_CONFIG_FILE=${{ env.TEMP_DIR }}/kind.yaml
+    #     echo "KIND_CONFIG_FILE=${KIND_CONFIG_FILE}" >> $GITHUB_ENV
+    #     envsubst < .github/resources/kind/kind.yaml > ${KIND_CONFIG_FILE}
 
-        sudo --preserve-env=REGISTRY_ADDRESS sh -c 'cat > /etc/containers/registries.conf.d/local.conf <<EOF
-        [[kind-registry]]
-        prefix = "$REGISTRY_ADDRESS"
-        insecure = true
-        location = "$REGISTRY_ADDRESS"
-        EOF'
+    #     sudo --preserve-env=REGISTRY_ADDRESS sh -c 'cat > /etc/containers/registries.conf.d/local.conf <<EOF
+    #     [[kind-registry]]
+    #     prefix = "$REGISTRY_ADDRESS"
+    #     insecure = true
+    #     location = "$REGISTRY_ADDRESS"
+    #     EOF'
 
     - name: Setup KinD cluster
       uses: helm/kind-action@v1.8.0
