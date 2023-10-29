@@ -86,36 +86,18 @@ jobs:
 
       - name: Load Image in KinD cluster
         run: |
-          #docker save docker.io/kindest/node:v1.28.0 -o quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
-    
-          # reg_name='kind-registry'
-          # REGISTRY_DIR="/etc/containerd/certs.d/${REGISTRY_ADDRESS}"
-          # for node in $(kind get nodes); do
-          #   docker exec "${node}" mkdir -p "${REGISTRY_DIR}"
-          #   cat <<EOF | docker exec -i "${node}" cp /dev/stdin "${REGISTRY_DIR}/hosts.toml"
-          # [host."${REGISTRY_ADDRESS}"]
-          # EOF
-          # done
-
-          # docker network connect "kind-cluster" "${reg_name}"
-
-          # docker tag quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          # docker push $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-
           docker exec -t kind-cluster-control-plane crictl images
-
-          docker network ls
       
       - name: Deploy Operatorhub operator
         id: deploy
         run: |
           echo Deploying Operatorhub operator
-          # IMG="${REGISTRY_ADDRESS}"/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          OPERATOR_NAMESPACE=opendatahub-operator-system
 
-          make deploy -e IMG="${IMG}"
-          kubectl wait --timeout=120s --for=condition=Available=true deployment -n opendatahub-operator-system
+          make deploy -e IMG="${IMG}" OPERATOR_NAMESPACE="${OPERATOR_NAMESPACE}"
+          kubectl wait --timeout=120s --for=condition=Available=true deployment --all
 
           kubectl get nodes -o wide
           kubectl get pods --all-namesapces
