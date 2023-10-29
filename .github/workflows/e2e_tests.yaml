@@ -101,7 +101,7 @@ jobs:
 
           kubectl get nodes -o wide
           kubectl get pods --all-namespaces
-          kubectl -n OPERATOR_NAMESPACE wait --timeout=300s --for=condition=Available deployments --all
+          kubectl  wait --timeout=300s --for=condition=Ready -n OPERATOR_NAMESPACE --all
 
       - name: Run e2e tests
         run: |
