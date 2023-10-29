@@ -97,7 +97,7 @@ jobs:
           OPERATOR_NAMESPACE=opendatahub-operator-system
 
           make deploy -e IMG="${IMG}" OPERATOR_NAMESPACE="${OPERATOR_NAMESPACE}"
-          kubectl -n OPERATOR_NAMESPACE wait --timeout=300s --for=condition=Available=true deployment --all
+          kubectl -n OPERATOR_NAMESPACE wait --timeout=300s --for=condition=Available=true deployments --all
 
           kubectl get nodes -o wide
           kubectl get pods --all-namesapces
