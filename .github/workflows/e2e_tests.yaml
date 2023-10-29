@@ -86,6 +86,7 @@ jobs:
 
       - name: Load Image in KinD cluster
         run: |
+          kind export kubeconfig --name kind-cluster
           kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
           docker exec -t kind-cluster-control-plane crictl images
       
@@ -100,12 +101,11 @@ jobs:
           make deploy -e IMG="${IMG}" OPERATOR_NAMESPACE="${OPERATOR_NAMESPACE}"
 
           kubectl get nodes -o wide
-          # kubectl -n OPERATOR_NAMESPACE wait --timeout=300s --for=condition=Ready=true deployments --all
+          kubectl wait --timeout=300s --for=condition=Available -n OPERATOR_NAMESPACE
           kubectl get pods --all-namespaces
 
       - name: Run e2e tests
         run: |
-          export KUBECONFIG="$(kind get kubeconfig-path)"
           make e2e-test OPERATOR_NAMESPACE=opendatahub-operator-system
 
       - name: Clean up KinD cluster
