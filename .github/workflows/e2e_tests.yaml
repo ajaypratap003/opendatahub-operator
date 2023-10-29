@@ -103,7 +103,7 @@ jobs:
           # docker tag quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           # docker push $REGISTRY_ADDRESS/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
-          dokcer exec -it kind-control-plane crictl images
+          docker exec -it kind-control-plane crictl images
 
           docker network ls
       
