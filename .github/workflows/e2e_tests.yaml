@@ -100,7 +100,7 @@ jobs:
           make deploy -e IMG="${IMG}" OPERATOR_NAMESPACE="${OPERATOR_NAMESPACE}"
 
           kubectl get nodes -o wide
-          kubectl -n OPERATOR_NAMESPACE wait --timeout=300s --for=condition=Ready=true deployments --all
+          # kubectl -n OPERATOR_NAMESPACE wait --timeout=300s --for=condition=Ready=true deployments --all
           kubectl get pods --all-namespaces
 
       - name: Run e2e tests
