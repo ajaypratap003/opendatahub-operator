@@ -104,7 +104,7 @@ jobs:
           kubectl describe pods -n $OPERATOR_NAMESPACE
           kubectl get events -n opendatahub-operator-system
 
-          kubectl  wait  -n $OPERATOR_NAMESPACE --for=condition=Available=true --timeout=3m deployments --all
+          kubectl  wait  -n $OPERATOR_NAMESPACE --for=condition=Available=true --timeout=5m
 
       - name: Run e2e tests
         run: |
