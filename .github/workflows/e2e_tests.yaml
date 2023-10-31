@@ -108,7 +108,7 @@ jobs:
       - name: Wait for ODHO deployment 
         run:  |
           kubectl get pods -n ${{env.OPERATOR_NAMESPACE}}
-          kubectl -n ${{ env.OPERATOR_NAMESPACE}} wait --timeout=120s --for=condition=Available=true  deployments --all
+          kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=120s --for=condition=Available=true  deployments --all
 
       - name: Run e2e tests
         run: |
