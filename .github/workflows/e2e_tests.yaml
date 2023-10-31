@@ -98,7 +98,7 @@ jobs:
           OPERATOR_NAMESPACE=opendatahub-operator-system
 
           kubectl config use-context kind-kind-cluster
-          make deploy -e IMG="${IMG}" OPERATOR_NAMESPACE="${OPERATOR_NAMESPACE}"
+          make deploy-bundle -e BUNDLE_IMG="${IMG}" OPERATOR_NAMESPACE="${OPERATOR_NAMESPACE}"
 
           kubectl get pods -n $OPERATOR_NAMESPACE
           kubectl describe pods -n $OPERATOR_NAMESPACE
