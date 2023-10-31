@@ -107,6 +107,8 @@ jobs:
 
           kubectl -n $OPERATOR_NAMESPACE wait --timeout=120s --for=condition=Available=true  deployments --all
 
+          kubectl get pods -n $OPERATOR_NAMESPACE
+
       - name: Run e2e tests
         run: |
           make e2e-test OPERATOR_NAMESPACE=opendatahub-operator-system
