@@ -107,6 +107,7 @@ jobs:
 
       - name: Wait for ODHO deployment 
         run:  |
+          OPERATOR_NAMESPACE=opendatahub-operator-system
           kubectl get pods -n $OPERATOR_NAMESPACE
           kubectl -n $OPERATOR_NAMESPACE wait --timeout=120s --for=condition=Available=true  deployment opendatahub-operator-controller-manager
 
