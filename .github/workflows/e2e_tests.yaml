@@ -101,7 +101,8 @@ jobs:
 
           kubectl get pods --all-namespaces
           kubectl describe pods -n $OPERATOR_NAMESPACE
-          kubectl  wait  -n $OPERATOR_NAMESPACE deployment/opendatahub-operator-controller-manager --for=condition=Available=true --timeout=120s
+          
+          kubectl  wait  -n $OPERATOR_NAMESPACE --for=condition=Available=true --timeout=300s deployments --all
 
       - name: Run e2e tests
         run: |
