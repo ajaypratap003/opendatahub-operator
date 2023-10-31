@@ -108,7 +108,7 @@ jobs:
       - name: Wait for ODHO deployment 
         run:  |
           kubectl get pods -n ${{env.OPERATOR_NAMESPACE}}
-          kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=120s --for=condition=Available=true  deployment opendatahub-operator-controller-manager
+          kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=300s --for=condition=Available=true  deployment opendatahub-operator-controller-manager
 
       - name: Run e2e tests
         run: |
