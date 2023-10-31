@@ -323,3 +323,27 @@ unit-test: envtest
 .PHONY: e2e-test
 e2e-test: ## Run e2e tests for the controller
 	go test ./tests/e2e/ -run ^TestOdhOperator -v --operator-namespace=${OPERATOR_NAMESPACE} ${E2E_TEST_FLAGS}
+
+#KinD
+.PHONY:	install_kind install_kubectl create_kind_cluster delete_kind_cluster load_image
+
+install_kind:
+	curl --location --output ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.20.0/kind-darwin-arm64
+		kind --version
+
+create_kind_cluster: install_kind install_kubectl
+	kind create cluster --kubeconfig /Users/ajaypratap/.kube/config --name kind-cluster --config ./kind_config.yaml || true && \
+		kubectl get nodes
+
+install_kubectl:
+	brew install kubectl
+
+delete_kind_cluster:
+	kind delete cluster --kubeconfig /Users/ajaypratap/.kube/config --name kind-cluster
+
+load_image:
+	kind load docker-image quay.io/apratap/opendatahub-operator-bundle:latest --name kind-cluster
+	docker exec -t kind-cluster-control-plane crictl images
+
+	# //kubectl config use-context kind-kind-cluster
+	# //opendatahub-operator-system
