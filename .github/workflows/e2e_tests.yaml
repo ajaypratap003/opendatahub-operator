@@ -29,6 +29,7 @@ env:
   BUNDLE_IMAGE_NAME: opendatahub-operator-bundle
   IMAGE_NAME: opendatahub-operator
   IMAGE_TAG: pr-test #pr-${{ github.event.pull_request.number }}
+  OPERATOR_NAMESPACE: opendatahub-operator-system
 
 jobs:
   kubernetes-e2e:
@@ -96,24 +97,22 @@ jobs:
         run: |
           echo Deploying Operatorhub operator
           IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          OPERATOR_NAMESPACE=opendatahub-operator-system
 
           kubectl config use-context kind-kind-cluster
-          make deploy -e IMG="${IMG}" OPERATOR_NAMESPACE="${OPERATOR_NAMESPACE}"
+          make deploy -e IMG="${IMG}" OPERATOR_NAMESPACE=${{env.OPERATOR_NAMESPACE}}
 
-          kubectl get pods -n $OPERATOR_NAMESPACE
-          kubectl describe pods -n $OPERATOR_NAMESPACE
+          kubectl get pods -n ${{env.OPERATOR_NAMESPACE}}
+          kubectl describe pods -n ${{env.OPERATOR_NAMESPACE}}
           kubectl get events -n opendatahub-operator-system
 
       - name: Wait for ODHO deployment 
         run:  |
-          OPERATOR_NAMESPACE=opendatahub-operator-system
-          kubectl get pods -n $OPERATOR_NAMESPACE
-          kubectl -n $OPERATOR_NAMESPACE wait --timeout=120s --for=condition=Available=true  deployment opendatahub-operator-controller-manager
+          kubectl get pods -n ${{env.OPERATOR_NAMESPACE}}
+          kubectl -n ${{ env.OPERATOR_NAMESPACE}} wait --timeout=120s --for=condition=Available=true  deployments --all
 
       - name: Run e2e tests
         run: |
-          make e2e-test OPERATOR_NAMESPACE=opendatahub-operator-system
+          make e2e-test OPERATOR_NAMESPACE=${{env.OPERATOR_NAMESPACE}}
 
       - name: Clean up KinD cluster
         run:  |
