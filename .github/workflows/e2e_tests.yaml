@@ -100,7 +100,7 @@ jobs:
           kubectl config use-context kind-kind-cluster
           make deploy -e IMG="${IMG}" OPERATOR_NAMESPACE="${OPERATOR_NAMESPACE}"
 
-          kubectl get pods --all-namespaces
+          kubectl get pods -n $OPERATOR_NAMESPACE
           kubectl describe pods -n $OPERATOR_NAMESPACE
 
           kubectl  wait  -n $OPERATOR_NAMESPACE --for=condition=Available=true --timeout=10m deployments --all
