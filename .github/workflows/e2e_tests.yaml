@@ -24,11 +24,11 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  QUAY_ORG: opendatahub #${{ secrets.QUAY_ORG}}
+  QUAY_ORG: ${{ secrets.QUAY_ORG}}
   IMAGE_REGISTRY: quay.io
   BUNDLE_IMAGE_NAME: opendatahub-operator-bundle
   IMAGE_NAME: opendatahub-operator
-  IMAGE_TAG: incubation #pr-4 #pr-${{ github.event.pull_request.number }}
+  IMAGE_TAG: pr-kind #pr-4 #pr-${{ github.event.pull_request.number }}
   OPERATOR_NAMESPACE: opendatahub-operator-system
 
 jobs:
