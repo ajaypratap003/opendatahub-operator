@@ -35,6 +35,8 @@ jobs:
   kubernetes-e2e:
     runs-on: ubuntu-latest
     steps:
+      - name: View Disk Usage
+        run: df -h
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -90,6 +92,9 @@ jobs:
           kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
           docker exec -t kind-cluster-control-plane crictl images
       
+      - name: View Disk Usage
+        run: df -h
+
       - name: Deploy Operatorhub operator
         id: deploy
         run: |
@@ -102,6 +107,12 @@ jobs:
           kubectl get pods -n ${{env.OPERATOR_NAMESPACE}}
           kubectl describe pods -n ${{env.OPERATOR_NAMESPACE}}
           kubectl get events -n opendatahub-operator-system
+
+      - name: View Disk Usage
+        run: df -h
+      
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@76866dbe54312617f00798d1762df7f43def6e5c
 
       - name: Wait for ODHO deployment 
         run:  |
