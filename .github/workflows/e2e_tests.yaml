@@ -28,16 +28,13 @@ env:
   IMAGE_REGISTRY: quay.io
   BUNDLE_IMAGE_NAME: opendatahub-operator-bundle
   IMAGE_NAME: opendatahub-operator
-  IMAGE_TAG: pr-test #pr-${{ github.event.pull_request.number }}
+  IMAGE_TAG: pr-4 #pr-${{ github.event.pull_request.number }}
   OPERATOR_NAMESPACE: opendatahub-operator-system
 
 jobs:
   kubernetes-e2e:
     runs-on: ubuntu-latest
     steps:
-      - name: View Disk Usage
-        run: df -h
-
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -55,7 +52,7 @@ jobs:
           username: ${{ secrets.QUAY_ID }}
           password: ${{ secrets.QUAY_TOKEN }}
 
-      - name: Build Operator Bundle
+      - name: Pull odh operator image
         run: |
           # Pull the image from registry
 
@@ -93,9 +90,6 @@ jobs:
           kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
           docker exec -t kind-cluster-control-plane crictl images
       
-      - name: View Disk Usage
-        run: df -h
-
       - name: Deploy Operatorhub operator
         id: deploy
         run: |
@@ -107,14 +101,10 @@ jobs:
 
           kubectl get pods -n ${{env.OPERATOR_NAMESPACE}}
           kubectl describe pods -n ${{env.OPERATOR_NAMESPACE}}
-          kubectl get events -n opendatahub-operator-system
-
-      - name: View Disk Usage
-        run: df -h
 
       - name: Wait for ODHO deployment 
         run:  |
-          kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=20m --for=condition=Available=true  deployment opendatahub-operator-controller-manager
+          kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=5m --for=condition=Available=true  deployment opendatahub-operator-controller-manager
 
       - name: Run e2e tests
         run: |
