@@ -99,11 +99,12 @@ jobs:
           kubectl config use-context kind-kind-cluster
           make deploy -e IMG="${IMG}" OPERATOR_NAMESPACE=${{env.OPERATOR_NAMESPACE}}
 
-          kubectl get pods -n ${{env.OPERATOR_NAMESPACE}}
-          kubectl describe pods -n ${{env.OPERATOR_NAMESPACE}}
-
       - name: Wait for ODHO deployment 
         run:  |
+          oc get pods -n ${{env.OPERATOR_NAMESPACE}}
+          oc describe pods -n ${{env.OPERATOR_NAMESPACE}}
+          oc get replicasets -n ${{env.OPERATOR_NAMESPACE}}
+
           kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=5m --for=condition=Available=true  deployment opendatahub-operator-controller-manager
 
       - name: Run e2e tests
