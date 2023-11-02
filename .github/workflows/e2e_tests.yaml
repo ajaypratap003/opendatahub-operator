@@ -110,13 +110,10 @@ jobs:
 
       - name: View Disk Usage
         run: df -h
-      
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@76866dbe54312617f00798d1762df7f43def6e5c
 
       - name: Wait for ODHO deployment 
         run:  |
-          kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=300s --for=condition=Available=true  deployment opendatahub-operator-controller-manager
+          kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=10m --for=condition=Available=true  deployment opendatahub-operator-controller-manager
 
       - name: Run e2e tests
         run: |
