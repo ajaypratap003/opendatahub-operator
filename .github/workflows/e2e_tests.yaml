@@ -101,9 +101,14 @@ jobs:
 
       - name: Wait for ODHO deployment 
         run:  |
+          echo "get pods"
           oc get pods -n ${{env.OPERATOR_NAMESPACE}}
+          echo "log describe"
           oc describe pods -n ${{env.OPERATOR_NAMESPACE}}
+          echo "get replicasets"
           oc get replicasets -n ${{env.OPERATOR_NAMESPACE}}
+          echo "get events"
+          oc get events  -n ${{env.OPERATOR_NAMESPACE}}
 
           kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=5m --for=condition=Available=true  deployment opendatahub-operator-controller-manager
 
