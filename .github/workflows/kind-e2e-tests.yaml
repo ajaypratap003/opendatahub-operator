@@ -110,42 +110,58 @@ jobs:
           SUBSCRIPTION_NAME: "opendatahub-operator"
           SUBSCRIPTION_NAMESPACE: "openshift-operators"
 
-      - name: Build and push Operator Bundle Image
+      - name: Create Namespace for ODHO
         run: |
-          # Pull the image from registry
+          kubectl create namespace ${{ env.ODHO_NS }}
+          kubectl config set-context --current --namespace=${{ env.ODHO_NS }}
+        env:
+          ODHO_NS: opendatahub-operator
 
-          while true
-          do
-            echo "Pulling image from Quay.io";
-            sleep 10
-
-            if docker pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-            then
-              break
-            fi
-
-          done
-
-          # Build operator bundle image
-          make deploy-bundle -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
-          -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=docker
-
-      - name: Load Image in KinD cluster
+      - name: Deploy ODHO KfDef
         run: |
-          kind export kubeconfig --name kind-cluster
-          kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
-          docker exec -t kind-cluster-control-plane crictl images
+          kubectl apply -f ${{ env.RESOURCES_DIR }}/kfdef/kfdef.yaml -n ${{ env.ODHO_NS }}
+        env:
+          ODHO_NS: "opendatahub-operator"
+      
+      - name: Print ODH Operator Pod Logs
+        run: kubectl get pods -n openshift-operators -o jsonpath='{.items[*].metadata.name}' | xargs -I {} kubectl logs -n openshift-operators {}
+
+      - name: Wait for ODHO deployment to be ready
+        run: |
+          kubectl get deployments -n ${{ env.ODHO_NS }}
+          timeout 300 bash -c 'until [[ $(kubectl get deployment/opendatahub-operator-controller-manager -n '${{ env.ODHO_NS }}') ]]; do sleep 5 && echo "$(kubectl get deployment/opendatahub-operator-controller-manager -n '${{ env.ODHO_NS }}')"; done'
+        env:
+          ODHO_NS: opendatahub-operator
+
+      # - name: Build and push Operator Bundle Image
+      #   run: |
+      #     # Pull the image from registry
+
+      #     while true
+      #     do
+      #       echo "Pulling image from Quay.io";
+      #       sleep 10
+
+      #       if docker pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+      #       then
+      #         break
+      #       fi
+
+      #     done
+
+      #     # Build operator bundle image
+      #     make deploy-bundle -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+      #     -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=docker
+
+      # - name: Load Image in KinD cluster
+      #   run: |
+      #     kind export kubeconfig --name kind-cluster
+      #     kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
+      #     docker exec -t kind-cluster-control-plane crictl images
 
 
       - name: Print ODH Operator Pod Logs
         run: kubectl get pods -n openshift-operators -o jsonpath='{.items[*].metadata.name}' | xargs -I {} kubectl logs -n openshift-operators {}
-
-      # - name: Wait for DSPO deployment to be ready
-      #   run: |
-      #     kubectl get deployments -n ${{ env.ODHO }}
-      #     timeout 300 bash -c 'until [[ $(kubectl get deployment/opendatahub-operator-controller-manager -n '${{ env.ODHO }}') ]]; do sleep 5 && echo "$(kubectl get deployment/opendatahub-operator-controller-manager -n '${{ env.ODHO }}')"; done'
-      #   env:
-      #     ODHO: opendatahub-operator-controller-manager
 
       - name: Run e2e tests
         run: |

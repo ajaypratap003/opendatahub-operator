@@ -1,0 +1,16 @@
+apiVersion: kfdef.apps.kubeflow.org/v1
+kind: KfDef
+metadata:
+   name: opendatahub-operator
+   finalizers:
+      - kfdef-finalizer.kfdef.apps.kubeflow.org
+spec:
+   applications:
+      - kustomizeConfig:
+           repoRef:
+              name: manifests
+              path: config
+        name: opendatahub-operator
+   repos:
+      - name: manifests
+        uri: "https://github.com/opendatahub-io/opendatahub-operator/tarball/main"
