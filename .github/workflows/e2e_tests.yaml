@@ -105,8 +105,8 @@ jobs:
           IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
           kubectl config use-context kind-kind-cluster
-          
-          make image-push -e IMG="${IMG}"
+
+          make image-push -e IMG="${IMG}" IMAGE_BUILDER=docker
           make deploy-kind -e IMG="${IMG}" OPERATOR_NAMESPACE=${{env.OPERATOR_NAMESPACE}}
 
       - name: Wait for ODHO deployment 
