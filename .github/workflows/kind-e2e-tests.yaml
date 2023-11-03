@@ -63,32 +63,6 @@ jobs:
           kind get clusters
           kubectl get nodes -o wide
 
-      - name: Build and push Operator Bundle Image
-        run: |
-          # Pull the image from registry
-
-          while true
-          do
-            echo "Pulling image from Quay.io";
-            sleep 10
-
-            if docker pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-            then
-              break
-            fi
-
-          done
-
-          # Build operator bundle image
-          make deploy-bundle -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
-          -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=docker
-
-      - name: Load Image in KinD cluster
-        run: |
-          kind export kubeconfig --name kind-cluster
-          kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
-          docker exec -t kind-cluster-control-plane crictl images
-
       - name: Install OLM
         run: |
           kubectl create -f https://github.com/operator-framework/operator-lifecycle-manager/releases/download/${OLM_VERSION}/crds.yaml
@@ -135,6 +109,33 @@ jobs:
           CATALOG_SOURCE_NAMESPACE: "olm"
           SUBSCRIPTION_NAME: "opendatahub-operator"
           SUBSCRIPTION_NAMESPACE: "openshift-operators"
+
+      - name: Build and push Operator Bundle Image
+        run: |
+          # Pull the image from registry
+
+          while true
+          do
+            echo "Pulling image from Quay.io";
+            sleep 10
+
+            if docker pull quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+            then
+              break
+            fi
+
+          done
+
+          # Build operator bundle image
+          make deploy-bundle -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+          -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=docker
+
+      - name: Load Image in KinD cluster
+        run: |
+          kind export kubeconfig --name kind-cluster
+          kind load docker-image quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --name kind-cluster
+          docker exec -t kind-cluster-control-plane crictl images
+
 
       - name: Print ODH Operator Pod Logs
         run: kubectl get pods -n openshift-operators -o jsonpath='{.items[*].metadata.name}' | xargs -I {} kubectl logs -n openshift-operators {}
