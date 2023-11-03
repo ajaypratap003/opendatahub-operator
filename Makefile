@@ -319,3 +319,10 @@ unit-test: envtest
 .PHONY: e2e-test
 e2e-test: ## Run e2e tests for the controller
 	go test ./tests/e2e/ -run ^TestOdhOperator -v --operator-namespace=${OPERATOR_NAMESPACE} ${E2E_TEST_FLAGS}
+
+.PHONY: deploy-kind
+deploy-kind:
+	cd config/overlays/kind-tests \
+		&& kustomize edit set image controller=${IMG} \
+		&& kustomize edit set namespace ${OPERATOR_NAMESPACE}
+	kustomize build config/overlays/kind-tests | kubectl apply -f -
