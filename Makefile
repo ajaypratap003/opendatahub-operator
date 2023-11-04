@@ -323,6 +323,6 @@ e2e-test: ## Run e2e tests for the controller
 .PHONY: deploy-kind
 deploy-kind:
 	cd config/overlays/kind-tests \
-		&& kustomize edit set image controller=${IMG} \
-		&& kustomize edit set namespace ${OPERATOR_NAMESPACE}
-	kustomize build config/overlays/kind-tests | kubectl apply -f -
+		&& $(KUSTOMIZE) edit set image controller=${IMG} \
+		&& $(KUSTOMIZE) edit set namespace ${OPERATOR_NAMESPACE}
+	$(KUSTOMIZE) build config/overlays/kind-tests | kubectl apply -f -
