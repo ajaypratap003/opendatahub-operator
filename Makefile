@@ -321,8 +321,8 @@ e2e-test: ## Run e2e tests for the controller
 	go test ./tests/e2e/ -run ^TestOdhOperator -v --operator-namespace=${OPERATOR_NAMESPACE} ${E2E_TEST_FLAGS}
 
 .PHONY: deploy-kind
-deploy-kind:
-	cd config/overlays/kind-tests \
-		&& $(KUSTOMIZE) edit set image controller=${IMG} \
-		&& $(KUSTOMIZE) edit set namespace ${OPERATOR_NAMESPACE}
+bundle: manifests kustomize operator-sdk ## Generate bundle manifests and metadata, then validate generated files.
+	$(OPERATOR_SDK) generate kustomize manifests -q
+	cd config/overlays/kind-tests && $(KUSTOMIZE) edit set image controller=${IMG} \
+	&& $(KUSTOMIZE) edit set namespace ${OPERATOR_NAMESPACE}
 	$(KUSTOMIZE) build config/overlays/kind-tests | kubectl apply -f -
