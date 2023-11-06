@@ -30,6 +30,7 @@ env:
   IMAGE_NAME: opendatahub-operator
   IMAGE_TAG: pr-678 #pr-${{ github.event.pull_request.number }}
   OPERATOR_NAMESPACE: opendatahub-operator-system
+  IMAGE_BUILDER: docker
 
 jobs:
   kubernetes-e2e:
@@ -70,11 +71,11 @@ jobs:
 
           # Build operator bundle image
           make bundle-build -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
-          -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=docker
+          -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=${{env.IMAGE_BUILDER}}
 
       - name: Push Operator Bundle Image
         run:  |
-          make bundle-push -e  BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          make bundle-push -e  BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=${{env.IMAGE_BUILDER}}
      
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
@@ -102,7 +103,7 @@ jobs:
           kubectl create namespace ${{env.OPERATOR_NAMESPACE}}
 
           make bundle-deploy -e BUNDLE_IMG=$BUNDLE_IMG \
-          -e IMG=$IMG OPERATOR_NAMESPACE=${{env.OPERATOR_NAMESPACE}} IMAGE_BUILDER=docker 
+          -e IMG=$IMG OPERATOR_NAMESPACE=${{env.OPERATOR_NAMESPACE}} IMAGE_BUILDER=${{env.IMAGE_BUILDER}} 
 
 
       - name: Wait for ODHO deployment 
