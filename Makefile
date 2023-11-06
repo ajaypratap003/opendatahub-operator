@@ -326,3 +326,7 @@ bundle: manifests kustomize operator-sdk ## Generate bundle manifests and metada
 	cd config/overlays/kind-tests && $(KUSTOMIZE) edit set image controller=${IMG} \
 	&& $(KUSTOMIZE) edit set namespace ${OPERATOR_NAMESPACE}
 	$(KUSTOMIZE) build config/overlays/kind-tests | kubectl apply -f -
+
+.PHONY: bundle-deploy
+bundle-deploy: operator-sdk
+	$(OPERATOR_SDK) run bundle $(BUNDLE_IMG)
