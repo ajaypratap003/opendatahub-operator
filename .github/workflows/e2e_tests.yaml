@@ -107,7 +107,7 @@ jobs:
           echo "Get events"
           kubectl get events  -n ${{env.OPERATOR_NAMESPACE}}
           echo "Get logs"
-          kubectl logs mypod --all-containers
+          kubectl logs opendatahub-operator-controller-manager --all-containers
           echo "Get deployment"
           kubectl describe deployment controller-manager
 
