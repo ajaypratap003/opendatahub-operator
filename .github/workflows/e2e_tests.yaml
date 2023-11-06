@@ -98,16 +98,20 @@ jobs:
 
       - name: Wait for ODHO deployment 
         run:  |
-          echo "get pods"
-          oc get pods -A
-          echo "log describe"
-          oc describe pods -n ${{env.OPERATOR_NAMESPACE}}
-          echo "get replicasets"
-          oc get replicasets -n ${{env.OPERATOR_NAMESPACE}}
-          echo "get events"
-          oc get events  -n ${{env.OPERATOR_NAMESPACE}}
+          echo "Get pods"
+          kubectl get pods -A
+          echo "Log describe"
+          kubectl describe pods -n ${{env.OPERATOR_NAMESPACE}}
+          echo "Get replicasets"
+          kubectl get replicasets -n ${{env.OPERATOR_NAMESPACE}}
+          echo "Get events"
+          kubectl get events  -n ${{env.OPERATOR_NAMESPACE}}
+          echo "Get logs"
+          kubectl logs mypod --all-containers
+          echo "Get deployment"
+          kubectl describe deployment controller-manager
 
-          kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=5m --for=condition=Available=true  deployment opendatahub-operator-controller-manager
+          kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=3m --for=condition=Available=true  deployment opendatahub-operator-controller-manager
       
       - name: Run e2e tests
         run: |
