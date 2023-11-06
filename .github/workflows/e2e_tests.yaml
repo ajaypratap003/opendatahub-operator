@@ -69,8 +69,8 @@ jobs:
           done
 
           # Build operator bundle image
-          make bundle-build BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
-          -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=docker IMAGE_OWNER=${{ env.QUAY_ORG }}
+          make bundle-build -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+          -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=docker
 
       - name: Push Operator Bundle Image
         run:  |
