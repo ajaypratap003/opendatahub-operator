@@ -111,9 +111,9 @@ jobs:
           CATALOG_SOURCE_NAME: "operatorhubio-catalog"
           CATALOG_SOURCE_NAMESPACE: "olm"
 
-      - name: Create openshift-operator namespace and OperatorGroup
+      - name: Create openshift-operators namespace and OperatorGroup
         run: |
-          kubectl create namespace openshift-operators
+          # kubectl create namespace openshift-operators
           kubectl create -f ${{ env.RESOURCES_DIR }}/olm/operatorgroup.yaml
 
       - name: Create Namespace for ODHO
