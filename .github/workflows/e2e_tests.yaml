@@ -70,12 +70,12 @@ jobs:
           done
 
           # Build operator bundle image
-          make bundle-build -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
-          -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=${{env.IMAGE_BUILDER}}
+          # make bundle-build -e BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+          # -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=${{env.IMAGE_BUILDER}}
 
-      - name: Push Operator Bundle Image
-        run:  |
-          make bundle-push -e  BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=${{env.IMAGE_BUILDER}}
+      # - name: Push Operator Bundle Image
+      #   run:  |
+      #     make bundle-push -e  BUNDLE_IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.BUNDLE_IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_BUILDER=${{env.IMAGE_BUILDER}}
      
       - name: Setup and start KinD cluster
         uses: ./.github/actions/kind
@@ -102,7 +102,7 @@ jobs:
           kubectl config use-context kind-kind-cluster
           kubectl create namespace ${{env.OPERATOR_NAMESPACE}}
 
-          make bundle-deploy -e BUNDLE_IMG=$BUNDLE_IMG \
+          make deploy-bundle -e BUNDLE_IMG=$BUNDLE_IMG \
           -e IMG=$IMG OPERATOR_NAMESPACE=${{env.OPERATOR_NAMESPACE}} IMAGE_BUILDER=${{env.IMAGE_BUILDER}} 
 
 
