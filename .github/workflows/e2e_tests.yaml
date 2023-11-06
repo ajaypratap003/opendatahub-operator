@@ -109,7 +109,7 @@ jobs:
           echo "Get logs"
           kubectl logs opendatahub-operator-controller-manager --all-containers
           echo "Get deployment"
-          kubectl describe deployment controller-manager
+          kubectl describe deployment opendatahub-operator-controller-manager
 
           kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=3m --for=condition=Available=true  deployment opendatahub-operator-controller-manager
       
