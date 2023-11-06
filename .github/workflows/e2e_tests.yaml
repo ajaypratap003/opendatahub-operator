@@ -56,7 +56,7 @@ jobs:
           username: ${{ secrets.QUAY_ID }}
           password: ${{ secrets.QUAY_TOKEN }}
 
-      - name: Pull and build odh operator bundle image
+      - name: Build  operator bundle image
         run: |
           # Pull the image from registry
 
@@ -133,7 +133,7 @@ jobs:
       - name: Wait for ODHO deployment 
         run:  |
           echo "get pods"
-          oc get pods -n ${{env.OPERATOR_NAMESPACE}}
+          oc get pods -A
           echo "log describe"
           oc describe pods -n ${{env.OPERATOR_NAMESPACE}}
           echo "get replicasets"
