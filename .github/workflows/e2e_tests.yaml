@@ -108,9 +108,9 @@ jobs:
           # kubectl get events  -n ${{env.OPERATOR_NAMESPACE}}
 
           echo "Logs"
-          export podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -n ${{env.OPERATOR_NAMESPACE}})
-          sleep 2
-          kubectl logs $podname
+          # export podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -n ${{env.OPERATOR_NAMESPACE}})
+          # sleep 2
+          kubectl logs $(kubectl get pods --no-headers -o custom-columns=":metadata.name")
 
           kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=5m --for=condition=Available=true  deployment opendatahub-operator-controller-manager
       
