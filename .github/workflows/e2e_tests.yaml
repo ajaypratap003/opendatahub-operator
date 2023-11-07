@@ -30,6 +30,7 @@ env:
   IMAGE_NAME: opendatahub-operator
   IMAGE_TAG: test #pr-${{ github.event.pull_request.number }}
   OPERATOR_NAMESPACE: opendatahub-operator-system
+  RESOURCES_DIR: ${{ github.workspace }}/config
 
 jobs:
   kubernetes-e2e:
@@ -86,6 +87,10 @@ jobs:
         run: |
           kubectl create namespace ${{env.OPERATOR_NAMESPACE}}
           kubectl config set-context --current --namespace=$${{env.OPERATOR_NAMESPACE}}
+
+      - name: Apply CRDs
+        run: |
+          kubectl apply -f ${{ env.RESOURCES_DIR }}/crds
       
       - name: Deploy Operatorhub operator
         id: deploy
