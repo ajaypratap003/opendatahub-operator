@@ -90,8 +90,8 @@ jobs:
 
       - name: Apply CRDs
         run: |
-          kubectl apply -f ${{ env.RESOURCES_DIR }}/crds
-      
+          kubectl apply -f ${{ env.RESOURCES_DIR }}/crd
+
       - name: Deploy Operatorhub operator
         id: deploy
         run: |
