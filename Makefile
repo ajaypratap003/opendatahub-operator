@@ -342,7 +342,7 @@ delete_kind_cluster:
 	kind delete cluster --kubeconfig /Users/ajaypratap/.kube/config --name kind-cluster
 
 load_image:
-	kind load docker-image quay.io/apratap/opendatahub-operator-bundle:pr-678 --name kind-cluster
+	kind load docker-image quay.io/apratap/opendatahub-operator:test --name kind-cluster
 	docker exec -t kind-cluster-control-plane crictl images
 
 .PHONY: kind_context
