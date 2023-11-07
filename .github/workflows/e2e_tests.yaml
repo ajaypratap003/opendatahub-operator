@@ -86,7 +86,8 @@ jobs:
       - name: Create Namespace for ODHO
         run: |
           kubectl create namespace ${{env.OPERATOR_NAMESPACE}}
-          kubectl config set-context --current --namespace=$${{env.OPERATOR_NAMESPACE}}
+          kubectl config use-context kind-kind-cluster
+          # kubectl config set-context --current --namespace=$${{env.OPERATOR_NAMESPACE}}
 
       - name: Apply CRDs
         run: |
@@ -99,7 +100,6 @@ jobs:
           echo Deploying Operatorhub operator
           IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
-          kubectl config use-context kind-kind-cluster
           make deploy -e IMG=$IMG OPERATOR_NAMESPACE=${{env.OPERATOR_NAMESPACE}} IMAGE_BUILDER=${{env.IMAGE_BUILDER}}
 
       - name: Wait for ODHO deployment 
