@@ -90,14 +90,14 @@ jobs:
 
       - name: Apply CRDs
         env:
-        #   CONFIG_DIR: ${{ github.workspace }}/config
+          CONFIG_DIR: ${{ github.workspace }}/config
           BUNDLE_DIR:  ${{ github.workspace }}/bundle
         run: |
-          make bundle -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_OWNER=${{ env.QUAY_ORG }} IMAGE_BUILDER=docker
-          make install IMAGE_BUILDER=docker IMAGE_OWNER=${{ env.QUAY_ORG }}
-          # kubectl apply -f ${{ env.CONFIG_DIR }}/crd/bases
-          # kubectl apply -f ${{ env.CONFIG_DIR }}/crd/external
-          kubectl apply -f ${{ env.BUNDLE_DIR }}/manifests
+          # make bundle -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_OWNER=${{ env.QUAY_ORG }} IMAGE_BUILDER=docker
+          # make install IMAGE_BUILDER=docker IMAGE_OWNER=${{ env.QUAY_ORG }}
+          kubectl apply -f ${{ env.CONFIG_DIR }}/crd/bases
+          kubectl apply -f ${{ env.CONFIG_DIR }}/crd/external
+          kubectl apply -f ${{ env.CONFIG_DIR }}/manifests/bases
          
       - name: Deploy Operatorhub operator
         id: deploy
