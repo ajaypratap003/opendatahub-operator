@@ -29,7 +29,7 @@ env:
   BUNDLE_IMAGE_NAME: opendatahub-operator-bundle
   IMAGE_NAME: opendatahub-operator
   IMAGE_TAG: test #pr-${{ github.event.pull_request.number }}
-  OPERATOR_NAMESPACE: opendatahub-operator-system
+  OPERATOR_NAMESPACE: opendatahub-
 
 jobs:
   kubernetes-e2e:
@@ -121,6 +121,7 @@ jobs:
 
           kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=5m --for=condition=Available=true  deployment opendatahub-operator-controller-manager
           kubectl get pods -A
+          kubectl get deployment -A
 
       - name: Run e2e tests
         run: |
