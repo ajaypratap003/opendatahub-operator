@@ -91,11 +91,11 @@ jobs:
       - name: Apply CRDs
         env:
           CONFIG_DIR: ${{ github.workspace }}/config
-          BUNDLE_DIR:  ${{ github.workspace }}/manifests
+          BUNDLE_DIR:  ${{ github.workspace }}/bundle
         run: |
           kubectl apply -f ${{ env.CONFIG_DIR }}/crd/bases
           kubectl apply -f ${{ env.CONFIG_DIR }}/crd/external
-          kubectl apply -f ${{ env.BUNDLE_DIR }}/opendatahub-operator.clusterserviceversion.yaml
+          kubectl apply -f ${{ env.BUNDLE_DIR }}/manifests/opendatahub-operator.clusterserviceversion.yaml
          
       - name: Deploy Operatorhub operator
         id: deploy
