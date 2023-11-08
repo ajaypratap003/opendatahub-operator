@@ -93,6 +93,7 @@ jobs:
         #   CONFIG_DIR: ${{ github.workspace }}/config
         #   BUNDLE_DIR:  ${{ github.workspace }}/bundle
         run: |
+          make bundle -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           make install
           # kubectl apply -f ${{ env.CONFIG_DIR }}/crd/bases
           # kubectl apply -f ${{ env.CONFIG_DIR }}/crd/external
