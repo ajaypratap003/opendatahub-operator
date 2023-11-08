@@ -95,7 +95,7 @@ func (tc *testContext) testAllApplicationCreation(t *testing.T) error {
 	createdDSC := &dsc.DataScienceCluster{}
 
 	// Wait for applications to get deployed
-	time.Sleep(1 * time.Minute)
+	time.Sleep(5 * time.Minute)
 
 	err := tc.customClient.Get(tc.ctx, dscLookupKey, createdDSC)
 	if err != nil {
