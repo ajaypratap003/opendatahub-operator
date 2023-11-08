@@ -93,14 +93,7 @@ jobs:
         run: |
           kubectl apply -f ${{ env.RESOURCES_DIR }}/crd/bases
           kubectl apply -f ${{ env.RESOURCES_DIR }}/crd/external
-
-      - name: Deploy Operatorhub operator
-        id: deploy
-        run: |
-          echo Deploying Operatorhub operator
-          IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-
-          make deploy -e IMG=$IMG OPERATOR_NAMESPACE=${{env.OPERATOR_NAMESPACE}} IMAGE_BUILDER=${{env.IMAGE_BUILDER}}
+          #kubectl wait -n ${{env.OPERATOR_NAMESPACE}} deployment/opendatahub-operator-controller-manager --for=condition=Available=true --timeout=60s
 
       - name: Wait for ODHO deployment 
         run:  |
@@ -115,7 +108,15 @@ jobs:
 
           kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=5m --for=condition=Available=true  deployment opendatahub-operator-controller-manager
           kubectl get pods -A
-          
+
+      - name: Deploy Operatorhub operator
+        id: deploy
+        run: |
+          echo Deploying Operatorhub operator
+          IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+          make deploy -e IMG=$IMG OPERATOR_NAMESPACE=${{env.OPERATOR_NAMESPACE}} IMAGE_BUILDER=${{env.IMAGE_BUILDER}}
+
       - name: Run e2e tests
         run: |
           make e2e-test OPERATOR_NAMESPACE=${{env.OPERATOR_NAMESPACE}}
