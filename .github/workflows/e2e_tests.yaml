@@ -87,7 +87,7 @@ jobs:
         run: |
           kubectl create namespace ${{env.OPERATOR_NAMESPACE}}
           # kubectl config use-context kind-kind-cluster
-          kubectl config set-context --current --namespace=$${{env.OPERATOR_NAMESPACE}}
+          kubectl config set-context --current --namespace=${{env.OPERATOR_NAMESPACE}}
 
       - name: Apply CRDs
         run: |
