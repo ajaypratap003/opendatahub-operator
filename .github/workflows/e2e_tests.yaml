@@ -94,6 +94,7 @@ jobs:
           kubectl apply -f ${{ env.RESOURCES_DIR }}/crd/bases
           kubectl apply -f ${{ env.RESOURCES_DIR }}/crd/external
           sleep 60
+          kubectl get all -n ${{env.OPERATOR_NAMESPACE}}
           #kubectl wait -n ${{env.OPERATOR_NAMESPACE}} deployment/opendatahub-operator-controller-manager --for=condition=Available=true --timeout=60s
 
       - name: Deploy Operatorhub operator
