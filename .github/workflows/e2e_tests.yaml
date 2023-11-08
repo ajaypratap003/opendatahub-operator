@@ -114,7 +114,8 @@ jobs:
           kubectl get events  -n ${{env.OPERATOR_NAMESPACE}}
 
           kubectl wait -n ${{ env.OPERATOR_NAMESPACE}} --timeout=5m --for=condition=Available=true  deployment opendatahub-operator-controller-manager
-      
+          kubectl get pods -A
+          
       - name: Run e2e tests
         run: |
           make e2e-test OPERATOR_NAMESPACE=${{env.OPERATOR_NAMESPACE}}
