@@ -89,13 +89,14 @@ jobs:
           kubectl config set-context --current --namespace=${{env.OPERATOR_NAMESPACE}}
 
       - name: Apply CRDs
-        env:
-          CONFIG_DIR: ${{ github.workspace }}/config
-          BUNDLE_DIR:  ${{ github.workspace }}/bundle
+        # env:
+        #   CONFIG_DIR: ${{ github.workspace }}/config
+        #   BUNDLE_DIR:  ${{ github.workspace }}/bundle
         run: |
-          kubectl apply -f ${{ env.CONFIG_DIR }}/crd/bases
-          kubectl apply -f ${{ env.CONFIG_DIR }}/crd/external
-          kubectl apply -f ${{ env.BUNDLE_DIR }}/manifests
+          make install
+          # kubectl apply -f ${{ env.CONFIG_DIR }}/crd/bases
+          # kubectl apply -f ${{ env.CONFIG_DIR }}/crd/external
+          # kubectl apply -f ${{ env.BUNDLE_DIR }}/manifests
          
       - name: Deploy Operatorhub operator
         id: deploy
