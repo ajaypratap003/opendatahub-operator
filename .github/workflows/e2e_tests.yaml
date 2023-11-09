@@ -29,7 +29,7 @@ env:
   BUNDLE_IMAGE_NAME: opendatahub-operator-bundle
   IMAGE_NAME: opendatahub-operator
   IMAGE_TAG: test #pr-${{ github.event.pull_request.number }}
-  OPERATOR_NAMESPACE: opendatahub
+  OPERATOR_NAMESPACE: opendatahub-operator-system
 
 jobs:
   kubernetes-e2e:
