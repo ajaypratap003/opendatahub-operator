@@ -91,12 +91,13 @@ jobs:
       - name: Apply CRDs
         env:
           CONFIG_DIR: ${{ github.workspace }}/config
-          BUNDLE_DIR:  ${{ github.workspace }}/bundle
+          RESOURCES_DIR:  ${{ github.workspace }}/.github/resources
         run: |
           # make bundle -e IMG=quay.io/${{ env.QUAY_ORG }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} IMAGE_OWNER=${{ env.QUAY_ORG }} IMAGE_BUILDER=docker
           # make install IMAGE_BUILDER=docker IMAGE_OWNER=${{ env.QUAY_ORG }}
           #kubectl apply -f ${{ env.CONFIG_DIR }}/crd/bases
           kubectl apply -f ${{ env.CONFIG_DIR }}/crd/external/operators.coreos.com_clusterserviceversions.yaml
+          kubectl apply -f ${{ env.RESOURCES_DIR }}/crd
 
           kubectl get crd
          
