@@ -97,7 +97,7 @@ jobs:
           # make install IMAGE_BUILDER=docker IMAGE_OWNER=${{ env.QUAY_ORG }}
           #kubectl apply -f ${{ env.CONFIG_DIR }}/crd/bases
           kubectl apply -f ${{ env.CONFIG_DIR }}/crd/external/operators.coreos.com_clusterserviceversions.yaml
-          kubectl apply -f ${{ env.RESOURCES_DIR }}/crd
+          kubectl apply -f ${{ env.RESOURCES_DIR }}/crds
 
           kubectl get crd
          
