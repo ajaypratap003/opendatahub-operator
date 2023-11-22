@@ -164,6 +164,18 @@ run: manifests generate fmt vet ## Run a controller from your host.
 image-build: unit-test ## Build image with the manager.
 	$(IMAGE_BUILDER) build --no-cache -f Dockerfiles/Dockerfile  ${IMAGE_BUILD_FLAGS} -t $(IMG) .
 
+.PHONY:	image-build-debug
+image-build-debug:	unit-test ## Build image with the manager.
+	$(IMAGE_BUILDER) build --no-cache \
+		--build-arg GOLANG_VERSION=$(TOOLBOX_GOLANG_VERSION) \
+		-f Dockerfiles/debug.Dockerfile  $(IMAGE_BUILD_FLAGS) -t $(IMG) .
+
+.PHONY:	deploy-debug
+deploy-debug:	manifests kustomize
+	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
+	$(KUSTOMIZE) build config/debug | kubectl apply --namespace $(OPERATOR_NAMESPACE) -f -
+
+
 .PHONY: image-push
 image-push: ## Push image with the manager.
 	$(IMAGE_BUILDER) push $(IMG)
@@ -319,3 +331,5 @@ unit-test: envtest
 .PHONY: e2e-test
 e2e-test: ## Run e2e tests for the controller
 	go test ./tests/e2e/ -run ^TestOdhOperator -v --operator-namespace=${OPERATOR_NAMESPACE} ${E2E_TEST_FLAGS}
+
+
